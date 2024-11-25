@@ -89,8 +89,8 @@ ROBOTSTXT_OBEY = True
 
 # Set settings whose default value is deprecated to a future-proof value
 DOWNLOAD_HANDLERS = {
-    "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
-    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+    'http': 'ecomscraper.downloadhandlers.EcomPlaywrightDownloadHandler',
+    'https': 'ecomscraper.downloadhandlers.EcomPlaywrightDownloadHandler',
 }
 
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
