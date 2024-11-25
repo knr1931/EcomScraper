@@ -29,7 +29,7 @@ EcomScraper focuses on scraping products from popular e-commerce platforms in In
     ```
 2. Navigate to the project directory:
     ```bash
-    cd EcomScraper
+    cd ecomscraper
     ```
 3. Create and activate a virtual environment:
     ```bash

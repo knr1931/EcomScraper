@@ -43,5 +43,6 @@ jobs:
     #     pytest
     - name: Run Scrapy spiders
       run: |
+        cd ecomscraper
         scrapy crawl amazon_spider  # Runs the Amazon scraper
         scrapy crawl flipkart_spider  # Runs the Flipkart scraper
