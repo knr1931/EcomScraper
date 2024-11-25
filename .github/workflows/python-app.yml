@@ -13,12 +13,13 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test-scrapers:
 
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        os: [ubuntu-latest, macos-latest]
         python-version: ['3.9', '3.10', '3.11', '3.12']  # List of Python versions to test
         
     steps:
