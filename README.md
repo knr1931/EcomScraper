@@ -40,6 +40,14 @@ EcomScraper focuses on scraping products from popular e-commerce platforms in In
     ```bash
     pip install -r requirements.txt
     ```
+5. Install playwright:
+    ```bash
+    playwright install
+    ```
+   - It's also possible to install only a subset of the available browsers:
+        ```bash
+        playwright install firefox chromium
+        ```
 
 ## Usage
 
