@@ -1,0 +1,9 @@
+scrapy              # Web scraping framework
+playwright         # Playwright for browser automation (if using headless browsers)
+pillow       # For handling images (useful for Playwright rendering)
+beautifulsoup4     # For parsing HTML if necessary (optional)
+lxml             # For faster HTML parsing with Scrapy (optional)
+selenium            # If you plan to use Selenium in addition to Playwright
+requests           # For making HTTP requests (optional)
+pandas              # For data manipulation (optional)
+scrapy-playwright   # Integration between Scrapy and Playwright
