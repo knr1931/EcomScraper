@@ -8,7 +8,7 @@ AMAZON_BASE_URL = "https://www.amazon.in"
 AMAZON_ALL_MOBILE_PHONES_URL = "https://www.amazon.in/s?i=electronics&rh=n%3A1389432031&s=popularity-rank&fs=true&ref=lp_1389432031_sar"
 SUBCATEGORY_URLS = {
     'smartphones': "https://www.amazon.in/s?i=electronics&rh=n%3A1805560031&s=popularity-rank&fs=true&ref=lp_1805560031_sar",
-    'laptops': "https://www.amazon.in/s?i=computers&rh=n%3A1375424031&s=popularity-rank&fs=true&ref=lp_1375424031_sar"
+    'laptops': "https://www.amazon.in/s?i=computers&rh=n%3A22963796031&s=popularity-rank&fs=true&ref=lp_22963796031_sar"
 }
 
 
