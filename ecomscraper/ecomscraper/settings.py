@@ -95,3 +95,8 @@ DOWNLOAD_HANDLERS = {
 
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
+LOG_FORMAT = "%(levelname)s: %(message)s"
+LOG_DATEFORMAT = "%Y-%m-%d %H:%M:%S"
+LOG_FILE = "scrapy_log.txt"  # Save logs to a file
+LOG_LEVEL = "INFO"           # Set the logging level
