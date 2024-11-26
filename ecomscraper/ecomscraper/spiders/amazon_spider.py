@@ -40,10 +40,11 @@ class AmazonSpiderSpider(scrapy.Spider):
         print("Finished Scraping Amazon site...")
 
     def parse(self, response, **kwargs):
-        page_num = 1
         subcategory = kwargs.get("subcategory", "unknown")
-        self.logger.info(f'Scraping {subcategory} on page {page_num}')
-        print(f'Scraping {subcategory} on page {page_num}')
+        pagination_num = kwargs.get("pagination_num", 1)
+
+        self.logger.info(f'Scraping {subcategory} on page {pagination_num}')
+        print(f'Scraping {subcategory} on page {pagination_num}')
 
         products = response.xpath('//div[@class="a-section a-spacing-base"]//h2/a')
 
@@ -59,12 +60,11 @@ class AmazonSpiderSpider(scrapy.Spider):
 
         next_page = response.xpath('//a[contains(@class, "s-pagination-next")]/@href').get()
         if next_page:
-            page_num += 1
             absolute_next_page_url = construct_absolute_url(AMAZON_BASE_URL, next_page)
             self.logger.info(f"Following next page: {absolute_next_page_url}")
             yield response.follow(
                 url=absolute_next_page_url,
                 callback=self.parse,
                 meta={"playwright": True},
-                cb_kwargs={"subcategory": subcategory},
+                cb_kwargs={"subcategory": subcategory, "pagination_num": pagination_num + 1},
             )
