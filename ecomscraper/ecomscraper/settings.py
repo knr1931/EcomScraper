@@ -68,24 +68,32 @@ ROBOTSTXT_OBEY = True
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_ENABLED = True
 # The initial download delay
-#AUTOTHROTTLE_START_DELAY = 5
+AUTOTHROTTLE_START_DELAY = 3
 # The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 60
+AUTOTHROTTLE_MAX_DELAY = 10
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
+AUTOTHROTTLE_TARGET_CONCURRENCY = 2.0
 # Enable showing throttling stats for every response received:
-#AUTOTHROTTLE_DEBUG = False
+AUTOTHROTTLE_DEBUG = False
 
-# Enable and configure HTTP caching (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
-#HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = "httpcache"
-#HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
+HTTPCACHE_ENABLED = True  # Enable HTTP caching in `scrapy-playwright`
+HTTPCACHE_EXPIRATION_SECS = 3600  # Cached responses expire after 1 hour (3600 seconds)
+HTTPCACHE_DIR = "playwright_cache"  # Store cache in the "playwright_cache" directory
+HTTPCACHE_IGNORE_HTTP_CODES = [404, 500]  # Do not cache responses with status codes 404 (Not Found) or 500 (Server Error)
+HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"  # Use the filesystem for caching
+
+# Additional settings for `scrapy-playwright`
+PLAYWRIGHT_ENABLED = True  # Enable Playwright to use browser context and perform rendering tasks in Scrapy
+PLAYWRIGHT_BROWSER_TYPE = 'chromium'  # Choose the browser type (e.g., 'chromium', 'firefox', 'webkit')
+PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 60000  # Set default navigation timeout (milliseconds) for page loading
+PLAYWRIGHT_HEADLESS = True  # Run browser in headless mode to speed up crawling (set to `False` for visual debugging)
+
+# If using Playwright with caching, ensure that the cache used matches the browser context's storage state
+# By default, caching in Scrapy will use filesystem storage; if needed, you can customize storage (e.g., `RedisCacheStorage`).
+
 
 # Set settings whose default value is deprecated to a future-proof value
 DOWNLOAD_HANDLERS = {
