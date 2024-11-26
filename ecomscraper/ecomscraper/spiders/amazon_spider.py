@@ -16,15 +16,17 @@ class AmazonSpiderSpider(scrapy.Spider):
     name = "amazon_spider"
     allowed_domains = ["www.amazon.in"]
 
-
     def start_requests(self) -> Iterable[Request]:
-        self.logger.info("Starting the spider...")  # Log an informational message
+        self.logger.info("Starting the Amazon spider...")
+        print("Starting the Amazon spider...") # Log an informational message
         subcategories = getattr(self, "subcategories", "all").split(',')
 
         if not subcategories or "all" in subcategories:
             subcategories = SUBCATEGORY_URLS.keys()
 
         for subcategory in subcategories:
+            self.logger.info(f"Scraping subcategory: {subcategory}")
+            print(f"Scraping subcategory: {subcategory}")
             subcategory_url = SUBCATEGORY_URLS.get(subcategory.strip())
             if subcategory_url:
                 yield scrapy.Request(
@@ -34,9 +36,14 @@ class AmazonSpiderSpider(scrapy.Spider):
                     cb_kwargs={"subcategory": subcategory}
                 )
 
+        self.logger.info("Finished the Amazon spider...")
+        print("Finished Scraping Amazon site...")
+
     def parse(self, response, **kwargs):
+        page_num = 1
         subcategory = kwargs.get("subcategory", "unknown")
-        self.logger.info(f"Scraping subcategory: {subcategory}")
+        self.logger.info(f'Scraping {subcategory} on page {page_num}')
+        print(f'Scraping {subcategory} on page {page_num}')
 
         products = response.xpath('//div[@class="a-section a-spacing-base"]//h2/a')
 
@@ -49,11 +56,10 @@ class AmazonSpiderSpider(scrapy.Spider):
                 "product_url": product_absolute_url
             }
 
-        self.follow_pagination(response, subcategory)
 
-    def follow_pagination(self, response, subcategory: str):
         next_page = response.xpath('//a[contains(@class, "s-pagination-next")]/@href').get()
         if next_page:
+            page_num += 1
             absolute_next_page_url = construct_absolute_url(AMAZON_BASE_URL, next_page)
             self.logger.info(f"Following next page: {absolute_next_page_url}")
             yield response.follow(
