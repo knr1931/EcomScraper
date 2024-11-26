@@ -2,7 +2,7 @@ from typing import Iterable
 
 import scrapy
 from scrapy import Request
-from ecomscraper.ecomscraper.utils.helpers import construct_absolute_url
+from ecomscraper.utils.helpers import construct_absolute_url
 
 AMAZON_BASE_URL = "https://www.amazon.in"
 AMAZON_ALL_MOBILE_PHONES_URL = "https://www.amazon.in/s?i=electronics&rh=n%3A1389432031&s=popularity-rank&fs=true&ref=lp_1389432031_sar"
