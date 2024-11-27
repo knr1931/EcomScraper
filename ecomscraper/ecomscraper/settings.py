@@ -80,7 +80,7 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 2.0
 AUTOTHROTTLE_DEBUG = False
 
 HTTPCACHE_ENABLED = True  # Enable HTTP caching in `scrapy-playwright`
-HTTPCACHE_EXPIRATION_SECS = 3600  # Cached responses expire after 1 hour (3600 seconds)
+HTTPCACHE_EXPIRATION_SECS = 300 # 3600  # Cached responses expire after 1 hour (3600 seconds)
 HTTPCACHE_DIR = "playwright_cache"  # Store cache in the "playwright_cache" directory
 HTTPCACHE_IGNORE_HTTP_CODES = [404, 500]  # Do not cache responses with status codes 404 (Not Found) or 500 (Server Error)
 HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"  # Use the filesystem for caching

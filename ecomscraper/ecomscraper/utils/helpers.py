@@ -13,3 +13,7 @@ def log_pagination(logger, current_page, next_page_url):
     Logs information about pagination.
     """
     logger.info(f"Processing page {current_page}, next page: {next_page_url}")
+
+def convert_price_str_to_float(price_str: str) -> float:
+    cleaned_price = price_str.replace("₹", "").replace(",", "").strip()
+    return round(float(cleaned_price), 2)
