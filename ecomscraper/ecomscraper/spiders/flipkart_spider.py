@@ -14,7 +14,7 @@ SUBCATEGORY_URLS = {
 
 class FlipkartSpiderSpider(scrapy.Spider):
     name = "flipkart_spider"
-    allowed_domains = ["www.flipkart.com"]
+    allowed_domains = ["www.flipkart.com", "https://proxy.scrapeops.io/"]
 
     def start_requests(self) -> Iterable[Request]:
         self.logger.info("Starting the Flipkart spider...")
