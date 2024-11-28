@@ -2,7 +2,7 @@ from typing import Iterable
 
 import scrapy
 from scrapy import Request
-from ecomscraper.utils.helpers import construct_absolute_url, convert_price_str_to_float
+from ecomscraper.utils.helpers import construct_absolute_url, convert_str_to_float
 
 AMAZON_BASE_URL = "https://www.amazon.in"
 AMAZON_ALL_MOBILE_PHONES_URL = "https://www.amazon.in/s?i=electronics&rh=n%3A1389432031&s=popularity-rank&fs=true&ref=lp_1389432031_sar"
@@ -109,19 +109,19 @@ class AmazonSpiderSpider(scrapy.Spider):
             '//div[@id="corePriceDisplay_desktop_feature_div"]//span[@class="a-price-whole"]/text()').get()).strip()
 
         print(price)
-        price = convert_price_str_to_float(price)
+        price = convert_str_to_float(price)
 
 
         mrp = str(response.xpath(
             '//div[@class="a-section a-spacing-small aok-align-center"]//span[@class="a-offscreen"]/text()').get()).strip()
 
-        mrp = convert_price_str_to_float(mrp)
+        mrp = convert_str_to_float(mrp)
 
         discount = round((price - mrp) / mrp, 2)
 
         rating = f'{str(response.xpath('(//span[@id="acrPopover"])[1]//span[@class="a-size-base a-color-base"]/text()').get()).strip()}/5'
 
-        num_of_reviews = int(convert_price_str_to_float(str(response.xpath(
+        num_of_reviews = int(convert_str_to_float(str(response.xpath(
             '(//div[@id="averageCustomerReviews"])[1]//span[@id="acrCustomerReviewText"]/text()').get()).strip().split(
             " ")[0]))
 

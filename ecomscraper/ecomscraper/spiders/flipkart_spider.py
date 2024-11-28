@@ -1,8 +1,9 @@
 from typing import Iterable
 import scrapy
+from pygments.lexer import default
 from scrapy import Request
 
-from ecomscraper.utils.helpers import construct_absolute_url, convert_price_str_to_float
+from ecomscraper.utils.helpers import construct_absolute_url, convert_str_to_float, convert_str_to_int
 
 FLIPKART_BASE_URL = "https://www.flipkart.com/"
 SUBCATEGORY_URLS = {
@@ -49,26 +50,49 @@ class FlipkartSpiderSpider(scrapy.Spider):
             self.logger.info(f'Scraping product {product_num}....')
             print(f'Scraping product {product_num}....')
 
+            # Scraping fields like product name, price, link etc.........
             product_link = product.xpath('.//@href').get()
             product_absolute_url = construct_absolute_url(FLIPKART_BASE_URL, product_link)
             self.logger.debug(f"Constructed URL: {product_absolute_url}")
 
-            product_name = product.xpath('.//div[@class="KzDlHZ"]/text()').get()
-            yield response.follow(
-                url=product_absolute_url,
-                callback=self.parse_product,
-                meta={
-                    "playwright": True,
-                },
-                cb_kwargs={
-                    "subcategory": subcategory,
-                    "product_url": product_absolute_url,
-                    "product_name": product_name
-                },
-            )
+            product_name = product.xpath('.//div[@class="KzDlHZ"]/text()').get(default="").strip()
+
+            price_str = product.xpath('.//div[@class="Nx9bqj _4b5DiR"]/text()').get(default="").strip()
+            mrp_str = product.xpath('.//div[@class="yRaY8j ZYYwLA"]/text()').get(default="").strip()
+
+            price = convert_str_to_float(price_str)
+            mrp = convert_str_to_float(mrp_str)
+            discount = round((abs(price - mrp) / mrp) * 100, 2) if mrp !=0 else 0
+
+            rating_str = product.xpath('.//div[@class="XQDdHH"]/text()').get(default="").strip()
+            rating = f'{rating_str.strip()}/5'
+
+            num_of_ratings_str = product.xpath('.//span[@class="Wphh3N"]/span/span[1]/text()').get(default="").strip()
+            num_of_ratings = convert_str_to_int(num_of_ratings_str.split(" ")[0])
+
+            product_features_list = response.xpath('.//ul[@class="G4BRas"]//li/text()').getall()
+            product_features = ';'.join(product_features_list)
+
+            product_image_url = product.xpath('.//div[@class="_4WELSP"]/img/@src').get()
+
+            yield {
+                "subcategory": subcategory,
+                "product_url": product_absolute_url,
+                "product_name": product_name,
+                'price': price,
+                'mrp': mrp,
+                'discount': discount,
+                'rating': rating,
+                'num of ratings': num_of_ratings,
+                'product features': product_features,
+                'product url': product_absolute_url,
+                'product image_url': product_image_url
+            }
+
             product_num += 1
 
-        next_page = response.xpath('//a[@class="_9QVEpD"]/@href').get()
+        next_page = response.xpath('//a[@class="_9QVEpD" and span[text()="Next"]]/@href').get()
+
         if next_page:
             absolute_next_page_url = construct_absolute_url(FLIPKART_BASE_URL, next_page)
             self.logger.info(f"Following next page: {absolute_next_page_url}")
@@ -79,42 +103,3 @@ class FlipkartSpiderSpider(scrapy.Spider):
                 cb_kwargs={"subcategory": subcategory, "pagination_num": pagination_num + 1,
                            "product_num": product_num},
             )
-
-    async def parse_product(self, response, **kwargs):
-        subcategory = kwargs.get("subcategory", "unknown")
-        product_absolute_url = kwargs.get("product_url", "unknown")
-
-        product_name = kwargs.get("product_name")
-        product_features_list = response.xpath('//div[@class="U+9u4y"]//li/text()').getall()
-        product_features = ';'.join(product_features_list)
-
-        price = response.xpath('//div[@class="hl05eU"]//div[@class="Nx9bqj CxhGGd"]/text()').get().strip()
-
-        price = convert_price_str_to_float(price)
-
-        mrp = response.xpath('//div[@class="hl05eU"]//div[@class="yRaY8j A6+E6v"]/text()').get().strip()
-
-        mrp = convert_price_str_to_float(mrp)
-
-        discount = round((abs(price - mrp) / mrp) * 100, 2)
-
-        rating_str = response.xpath('(//span[@class="Y1HWO0"])[1]').xpath('.//div/text()').get()
-        rating = f'{rating_str.strip()}/5'
-
-        num_of_ratings_str = response.xpath('//div[@class="_5OesEi HDvrBb"]/span[@class="Wphh3N"]').xpath(
-            './span/span[1]/text()').get()
-        num_of_ratings = int(convert_price_str_to_float(str(num_of_ratings_str).split(" ")[0]))
-
-        yield {
-            'category': subcategory,
-            'product name': product_name,
-            # 'brand': brand_name,
-            'price': price,
-            'mrp': mrp,
-            'discount': discount,
-            'rating': rating,
-            'num of ratings': num_of_ratings,
-            'product features': product_features,
-            'product url': product_absolute_url
-
-        }
